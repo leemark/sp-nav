@@ -2,7 +2,7 @@
 if(typeof Object.create !== 'function'){
     Object.create = function( obj ){
         function F(){}
-        F.protoype = obj;
+        F.prototype = obj;
         return new F();
     };
 }
@@ -14,20 +14,31 @@ if(typeof Object.create !== 'function'){
             var self = this;
             self.el = el;
             self.$el = $( el );
-            if (typeof options === 'string') {
+            console.log(options);
+            if (typeof options === 'string' || typeof options === 'number' ) {
                 self.speed = options;
+                self.offset = $.fn.spNav.options.offset;
             } else{
-                self.speed = options.speed;
+                self.speed = options.speed || $.fn.spNav.options.speed;
+                self.offset = options.offset || $.fn.spNav.options.offset;
+                self.activeClass = options.activeClass || $.fn.spNav.options.activeClass;
                 self.options = $.extend( {}, $.fn.spNav.options, options );
             }
-            self.attachScroll(self.$el, self.speed);
+            self.attachScroll(self.$el, self.speed, self.offset, self.activeClass);
         },
-        attachScroll: function($el, speed){
-            $el.find('a[href^=#]').on('click', function( e ){
+        attachScroll: function($el, speed, offset, activeClass){
+            var navItems = $el.find('a[href^=#]'); 
+            navItems.on('click', function( e ){
                 var target = $(this).attr('href'); 
+                var yPos = $(target).offset().top + offset;
                 $('html, body').animate({
-                    scrollTop: $(target).offset().top
-                }, speed);
+                    scrollTop: yPos
+                }, +speed);
+                navItems.each(function(){
+                    var target = $(this).attr('href');
+                    $(target).removeClass(activeClass);
+                });
+                $(target).addClass(activeClass);
                 e.preventDefault();
             });    
         }
@@ -41,7 +52,9 @@ if(typeof Object.create !== 'function'){
     };
     
     $.fn.spNav.options = {
-        speed: 700
+        speed: 700, 
+        offset: 0,
+        activeClass: 'sp-active'
     };
     
 })( jQuery, window, document );

@@ -7,6 +7,7 @@
         ul.sp-nav-menu {
             position: fixed;
             list-style-type: none;
+            top: 0;
         }
         ul.sp-nav-menu li {
             display: inline;
@@ -32,7 +33,7 @@
 </ul>
 <div class="content">
     <!-- the link targets -->    
-    <h1 id="thing-one">Thing One</h1>
+    <h1 id="thing-one" class="live">Thing One</h1>
     <h1 id="thing-two">Thing Two</h1>
     <h1 id="thing-three">Thing Three</h1>
     <h1 id="and-more">And More</h1>
@@ -42,7 +43,9 @@
 <script src="sp-nav.js"></script>   
 <script>
     $('.sp-nav-menu').spNav({
-        speed: 1500
+        speed: 1200,
+        offset: -50,
+        activeClass: 'live'
     });    
 </script>    
 </body>
